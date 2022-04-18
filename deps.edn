@@ -1,0 +1,4 @@
+{:deps {com.github.seancorfield/next.jdbc {:mvn/version "1.2.780"}
+        org.apache.pdfbox/pdfbox          {:mvn/version "2.0.25"}
+        org.clojure/data.json             {:mvn/version "2.4.0"}
+        org.xerial/sqlite-jdbc            {:mvn/version "3.36.0.3"}}}
