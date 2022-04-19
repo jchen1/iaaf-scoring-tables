@@ -1,28 +1,15 @@
 (ns main
-  (:require [pdf :as pdf]
+  (:require [clojure.data.json :as json]
+            [clojure.java.io :as io]
+            [db]
             [next.jdbc :as jdbc]
-            [next.jdbc.sql :as sql]))
+            [next.jdbc.sql :as sql]
+            [pdf]))
 
-(def db
-  {:dbtype "sqlite"
-   :dbname "iaaf.sqlite"})
-
-(def create-table-tx
-  ["CREATE TABLE IF NOT EXISTS points (
-    id INTEGER PRIMARY KEY,
-    category TEXT NOT NULL,
-    gender TEXT NOT NULL,
-    event TEXT NOT NULL,
-    mark REAL NOT NULL,
-    points INTEGER NOT NULL,
-    UNIQUE(category, gender, event, mark),
-    UNIQUE(category, gender, event, points)
-  );"])
-
-(defn -main
-  [& args]
-  (with-open [conn (-> db jdbc/get-datasource jdbc/get-connection)]
-    (jdbc/execute! conn create-table-tx)
+(defn create-db
+  []
+  (with-open [conn (db/conn)]
+    (jdbc/execute! conn db/create-table-tx)
     (let [marks (merge (pdf/parse-pdf "pdfs/indoor.pdf" :indoor)
                        (pdf/parse-pdf "pdfs/outdoor.pdf" :outdoor))
           cols-to-insert (->> marks
@@ -31,8 +18,26 @@
                                              (mapcat (fn [[event scores]]
                                                        (map (fn [[mark points]] [(namespace k) (name k) event mark points]) scores)))))))]
       (doseq [partition (partition-all 10 cols-to-insert)]
-        (sql/insert-multi! conn :points [:category :gender :event :mark :points] (vec partition))))))
+        (sql/insert-multi! conn :points db/all-columns (vec partition))))))
+
+(defn marks-for-event
+  [{:keys [gender category event] :as query}]
+  (with-open [conn (db/conn)]
+    (sql/find-by-keys conn :points
+                      {:gender gender :category category :event event}
+                      {:columns db/all-columns})))
+
+(defn db->flat-json
+  []
+  (with-open [conn (db/conn)]
+    (->> (sql/find-by-keys conn :points :all {:columns db/all-columns})
+         (map (fn [m] (->> m (map (fn [[k v]] [(keyword (name k)) v])) (into {}))))
+         (json/write-str)
+         (spit (io/file "iaaf.json")))))
+
+(defn -main
+  [& args]
+  (db->flat-json))
 
 (comment
-  (jdbc/get-datasource db)
   (-main))
