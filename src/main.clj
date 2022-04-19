@@ -2,9 +2,12 @@
   (:require [clojure.data.json :as json]
             [clojure.java.io :as io]
             [db]
+            [math]
             [next.jdbc :as jdbc]
             [next.jdbc.sql :as sql]
-            [pdf]))
+            [pdf]
+            [util]
+            [clojure.walk :as walk]))
 
 (defn create-db
   []
@@ -35,9 +38,41 @@
          (json/write-str)
          (spit (io/file "iaaf.json")))))
 
+(defn write-coefficients
+  []
+  (with-open [conn (db/conn)]
+    (let [coefficients (for [gender ["men" "women"]
+                             category ["indoor" "outdoor"]
+                             event constants/events]
+                         (when-let [marks (some->> (marks-for-event {:gender gender :category category :event event})
+                                                   not-empty
+                                                   (map (fn [{:points/keys [mark points]}] [mark points])))]
+                           (let [{:keys [coefficients]} (math/polynomial-regression (map first marks) (map second marks) 3)]
+                             {:gender gender
+                              :category category
+                              :event event
+                              :coefficients coefficients})))]
+      (->> coefficients
+           (keep identity)
+           (util/nest-by [:category :gender :event])
+           (walk/postwalk (fn [x]
+                            (if (and (vector? x)
+                                     (= 1 (count x))
+                                     (map? (first x)))
+                              (-> x first :coefficients)
+                              x)))
+           (json/write-str)
+           (spit (io/file "coefficients.json"))))))
+
 (defn -main
   [& args]
-  (db->flat-json))
+  (write-coefficients))
 
 (comment
+  (let [marks (->> (marks-for-event {:gender "men" :category "outdoor" :event "100m"})
+                   (map (fn [{:points/keys [mark points]}] [mark points])))]
+    (math/polynomial-regression (map first marks) (map second marks) 3))
+  (let [marks (->> (marks-for-event {:gender "men" :category "outdoor" :event "100m"})
+                   (map (fn [{:points/keys [mark points]}] [(/ 1 mark) points])))]
+    (math/polynomial-regression (map first marks) (map second marks) 2))
   (-main))

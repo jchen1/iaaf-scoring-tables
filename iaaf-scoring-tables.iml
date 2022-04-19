@@ -14,30 +14,16 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Deps: org.clojure/data.json:2.4.0" level="project" />
     <orderEntry type="library" name="Deps: org.clojure/clojure:1.11.1" level="project" />
-    <orderEntry type="library" name="Deps: mschuene/core.logic:0.8.11.1" level="project" />
     <orderEntry type="library" name="Deps: org.clojure/tools.logging:1.2.1" level="project" />
     <orderEntry type="library" name="Deps: org.clojure/core.specs.alpha:0.2.62" level="project" />
     <orderEntry type="library" name="Deps: org.clojure/spec.alpha:0.3.218" level="project" />
-    <orderEntry type="library" name="Deps: org.clojure/tools.trace:0.7.8" level="project" />
-    <orderEntry type="library" name="Deps: org.clojure/tools.macro:0.1.5" level="project" />
+    <orderEntry type="library" name="Deps: gov.nist.math/jama:1.0.3" level="project" />
     <orderEntry type="library" name="Deps: org.apache.pdfbox/pdfbox:2.0.25" level="project" />
     <orderEntry type="library" name="Deps: org.apache.pdfbox/fontbox:2.0.25" level="project" />
-    <orderEntry type="library" name="Deps: org.clojure/tools.namespace:0.2.5" level="project" />
-    <orderEntry type="library" name="Deps: instaparse:1.4.5" level="project" />
-    <orderEntry type="library" name="Deps: expresso:0.2.2" level="project" />
-    <orderEntry type="library" name="Deps: org.clojure/java.classpath:0.2.0" level="project" />
     <orderEntry type="library" name="Deps: commons-logging:1.2" level="project" />
     <orderEntry type="library" name="Deps: com.github.seancorfield/next.jdbc:1.2.780" level="project" />
-    <orderEntry type="library" name="Deps: cider/cider-nrepl:0.8.1" level="project" />
-    <orderEntry type="library" name="Deps: net.mikera/core.matrix:0.59.0" level="project" />
-    <orderEntry type="library" name="Deps: cljs-tooling:0.1.3" level="project" />
-    <orderEntry type="library" name="Deps: compliment:0.2.0" level="project" />
-    <orderEntry type="library" name="Deps: org.tcrawley/dynapath:0.2.3" level="project" />
     <orderEntry type="library" name="Deps: org.xerial/sqlite-jdbc:3.36.0.3" level="project" />
-    <orderEntry type="library" name="Deps: org.clojure/core.memoize:0.5.8" level="project" />
     <orderEntry type="library" name="Deps: camel-snake-kebab:0.4.2" level="project" />
-    <orderEntry type="library" name="Deps: org.clojure/data.priority-map:0.0.4" level="project" />
     <orderEntry type="library" name="Deps: org.clojure/java.data:1.0.95" level="project" />
-    <orderEntry type="library" name="Deps: org.clojure/core.cache:0.6.4" level="project" />
   </component>
 </module>

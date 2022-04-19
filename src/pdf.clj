@@ -1,77 +1,9 @@
 (ns pdf
   (:require [clojure.java.io :as io]
-            [clojure.string :as str])
+            [clojure.string :as str]
+            [constants])
   (:import [org.apache.pdfbox.pdmodel PDDocument]
            [org.apache.pdfbox.text PDFTextStripper]))
-
-(def event->measure
-  {"10 Miles"   :time
-   "10,000m"    :time
-   "10,000mW"   :time
-   "1000m"      :time
-   "100km"      :time
-   "100m"       :time
-   "100mH"      :time
-   "10km"       :time
-   "10kmW"      :time
-   "110mH"      :time
-   "15,000mW"   :time
-   "1500m"      :time
-   "15km"       :time
-   "15kmW"      :time
-   "2 Miles"    :time
-   "20,000mW"   :time
-   "2000m"      :time
-   "2000mSC"    :time
-   "200m"       :time
-   "20km"       :time
-   "20kmW"      :time
-   "25km"       :time
-   "30,000mW"   :time
-   "3000m"      :time
-   "3000mSC"    :time
-   "3000mW"     :time
-   "300m"       :time
-   "30km"       :time
-   "30kmW"      :time
-   "35,000mW"   :time
-   "35kmW"      :time
-   "3kmW"       :time
-   "400m"       :time
-   "400mH"      :time
-   "4x100m"     :time
-   "4x200m"     :time
-   "4x400m"     :time
-   "50,000mW"   :time
-   "5000m"      :time
-   "5000mW"     :time
-   "500m"       :time
-   "50kmW"      :time
-   "5km"        :time
-   "5kmW"       :time
-   "600m"       :time
-   "800m"       :time
-   "DT"         :distance
-   "Heptathlon" :points
-   "Decathlon"  :points
-   "HJ"         :distance
-   "HM"         :time
-   "HT"         :distance
-   "JT"         :distance
-   "LJ"         :distance
-   "Marathon"   :time
-   "Mile"       :time
-   "PV"         :distance
-   "SP"         :distance
-   "TJ"         :distance
-
-   "50m" :time
-   "55m" :time
-   "60m" :time
-   "50mH" :time
-   "55mH" :time
-   "60mH" :time
-   "Pentathlon" :points})
 
 (defmulti parse-mark (fn [mark-type _] mark-type))
 
@@ -135,10 +67,10 @@
                                                                (->> split
                                                                     (keep-indexed (fn [idx result]
                                                                                     (let [event (nth events idx)
-                                                                                          measure (event->measure event)]
+                                                                                          measure (constants/event->measure event)]
                                                                                       (when (and (not= event "Points") (nil? measure)) (prn event))
                                                                                       (when (and (not= result "-") (not= event "Points"))
-                                                                                        [event [[(parse-mark (event->measure event) result) (Integer/parseInt points)]]]))))
+                                                                                        [event [[(parse-mark (constants/event->measure event) result) (Integer/parseInt points)]]]))))
                                                                     (into {}))))))]
                                  (update acc gender (fn [score-map]
                                                      (apply merge-with concat score-map page-points)))))))
