@@ -3,22 +3,21 @@
 
 (def db
   {:dbtype "sqlite"
-   :dbname "iaaf.sqlite"})
+   :dbname "iaaf-2025.sqlite"})
 
 (def create-table-tx
   ["CREATE TABLE IF NOT EXISTS points (
     id INTEGER PRIMARY KEY,
-    category TEXT NOT NULL,
     gender TEXT NOT NULL,
     event TEXT NOT NULL,
     mark REAL NOT NULL,
     points INTEGER NOT NULL,
-    UNIQUE(category, gender, event, mark),
-    UNIQUE(category, gender, event, points)
+    UNIQUE(gender, event, mark),
+    UNIQUE(gender, event, points)
   );"])
 
 (def all-columns
-  [:category :gender :event :mark :points])
+  [:gender :event :mark :points])
 
 (defn conn
   []

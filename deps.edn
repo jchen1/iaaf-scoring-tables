@@ -1,5 +1,9 @@
 {:deps {com.github.seancorfield/next.jdbc {:mvn/version "1.2.780"}
         gov.nist.math/jama                {:mvn/version "1.0.3"}
-        org.apache.pdfbox/pdfbox          {:mvn/version "2.0.25"}
+        incanter/incanter                 {:mvn/version "1.9.3"
+                                           :exclusions  [bouncycastle/bctsp-jdk14]}
+        metasoarous/oz                    {:mvn/version "2.0.0-alpha5"} ;; https://github.com/metasoarous/oz/issues/184
+        org.bouncycastle/bcprov-jdk15on   {:mvn/version "1.70"}
+        org.apache.pdfbox/pdfbox          {:mvn/version "2.0.26"}
         org.clojure/data.json             {:mvn/version "2.4.0"}
         org.xerial/sqlite-jdbc            {:mvn/version "3.36.0.3"}}}
